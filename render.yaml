@@ -1,0 +1,22 @@
+services:
+  # Backend Service
+  - type: pserv
+    name: event-discovery-api
+    env: node
+    buildCommand: npm install && npm start
+    startCommand: npm start
+    healthCheckPath: /api/events
+    envVars:
+      - key: MONGO_URI
+        value: "@mongo-db"
+      - key: JWT_SECRET
+        value: "@jwt-secret"
+
+  # Frontend Service (Optional - for separate frontend deployment)
+  - type: web
+    name: event-discovery-frontend
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: "@event-discovery-api-on-render"
